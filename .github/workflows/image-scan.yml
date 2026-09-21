@@ -1,0 +1,53 @@
+name: Scan · Existing Image Tag
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Image tag to scan
+        required: true
+        default: 1.0.0
+        type: string
+
+run-name: "CI · ${{ github.event_name }} · ${{ github.sha }}"
+
+concurrency:
+  group: image-scan-${{ github.repository }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  init:
+    uses: grootan-devops/github-ci-library/.github/workflows/init.yml@dev
+    secrets: inherit
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: read
+    with:
+      tag: ${{ inputs.tag }}
+      ignore-docker: "false"
+      ignore-chart: "true"
+
+  trivy-cache:
+    uses: grootan-devops/github-ci-library/.github/workflows/trivy-cache.yml@dev
+    secrets: inherit
+    permissions:
+      contents: read
+      actions: write
+    with:
+      enable-java-db: false
+
+  image-scan:
+    needs: [init, trivy-cache]
+    uses: grootan-devops/github-ci-library/.github/workflows/scan.yml@dev
+    secrets: inherit
+    permissions:
+      contents: read
+      checks: write
+    with:
+      scan-type: image
+      image-repository: ${{ needs.init.outputs.image-repository }}
+      target-version: ${{ needs.init.outputs.image-tag }}

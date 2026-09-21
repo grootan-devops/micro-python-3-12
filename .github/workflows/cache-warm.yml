@@ -1,0 +1,24 @@
+name: Cache · Warm Trivy Databases
+run-name: "CI · ${{ github.event_name }} · ${{ github.sha }}"
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+
+concurrency:
+  group: cache-warm-${{ github.repository }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  trivy-cache:
+    uses: grootan-devops/github-ci-library/.github/workflows/trivy-cache.yml@dev
+    secrets: inherit
+    permissions:
+      contents: read
+      actions: write
+    with:
+      enable-java-db: false

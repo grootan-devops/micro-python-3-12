@@ -1,0 +1,107 @@
+name: Build · Manual Image Verification
+run-name: "CI · ${{ github.event_name }} · ${{ github.sha }}"
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: build-${{ github.repository }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  init:
+    uses: grootan-devops/github-ci-library/.github/workflows/init.yml@dev
+    secrets: inherit
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: read
+    with:
+      ignore-docker: "false"
+      ignore-chart: "true"
+
+  trivy-cache:
+    uses: grootan-devops/github-ci-library/.github/workflows/trivy-cache.yml@dev
+    secrets: inherit
+    permissions:
+      contents: read
+      actions: write
+    with:
+      enable-java-db: false
+
+  image:
+    needs: init
+    uses: grootan-devops/github-ci-library/.github/workflows/buildah.yml@dev
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    with:
+      image-tag: ${{ needs.init.outputs.image-push-tag }}
+      image-repository: ${{ needs.init.outputs.image-push-repository }}
+      base-image-repo: registry-1.docker.io/grootantech/micro-root
+      # renovate: datasource=gitlab-tags depName=devops/container-image/base/micro-root
+      base-image-tag: "1.0.0"
+      install-packages: >-
+        gawk make gcc gcc-c++ findutils libffi-devel zlib-devel openssl-devel
+        bzip2-devel libuuid-devel xz-devel sqlite-devel
+      required-packages: >-
+        basesystem bash coreutils coreutils-common coreutils-single filesystem
+        glibc glibc-common glibc-minimal-langpack libacl libattr libcap libgcc
+        libstdc++ libffi zlib openssl-libs bzip2-libs xz-libs sqlite-libs
+        libxcrypt libuuid expat libselinux libsepol ca-certificates tzdata
+        setup pcre pcre2 pcre2-syntax redhat-release grep sed crypto-policies
+        alternatives p11-kit p11-kit-trust libtasn1 libsigsegv
+        openssl-fips-provider
+        openssl-fips-provider-so gmp
+      force-remove-packages: >-
+        gawk make gcc gcc-c++ findutils libffi-devel zlib-devel openssl-devel
+        bzip2-devel libuuid-devel xz-devel sqlite-devel binutils cpp glibc-devel
+        pkgconf libstdc++-devel libxcrypt-devel glibc-headers kernel-headers
+        pkgconf-m4 libpkgconf libmpc ncurses-c++-libs
+        elfutils-default-yama-scope
+        pkgconfig systemd systemd-libs systemd-pam systemd-rpm-macros pam
+        libpwquality cracklib cracklib-dicts shadow-utils dbus dbus-broker
+        dbus-common audit-libs kmod-libs libsemanage libeconf libutempter
+        libseccomp acl libcap-ng libgcrypt libgpg-error openssl elfutils-libelf
+        libblkid libfdisk libmount libsmartcols util-linux util-linux-core
+        lz4-libs libzstd libdb readline gzip libgomp sqlite
+      container-path-env: "/usr/local/bin:/usr/bin:/bin"
+      container-entrypoint: '["/usr/bin/dumb-init", "--"]'
+      container-cmd: "python3.12"
+
+  image-test:
+    needs: image
+    runs-on: ${{ vars.CI_RUNNER || 'ubuntu-26.04' }}
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - name: Log in to Docker Hub
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v3
+        with:
+          registry: registry-1.docker.io
+          username: ${{ secrets.IMAGE_REGISTRY_USERNAME }}
+          password: ${{ secrets.IMAGE_REGISTRY_PASSWORD }}
+      - name: Run image smoke test as non-root
+        env:
+          IMAGE_REF: ${{ needs.image.outputs.image-ref-digest }}
+        run: >-
+          docker run --rm --privileged --user 10001:10001 --entrypoint /bin/bash
+          -v "${PWD}:/tmp/image-test:ro" "${IMAGE_REF}"
+          -c 'cd /tmp/image-test && ./ci_image_test.sh'
+
+  image-scan:
+    needs: [image, trivy-cache]
+    uses: grootan-devops/github-ci-library/.github/workflows/scan.yml@dev
+    secrets: inherit
+    permissions:
+      contents: read
+      checks: write
+    with:
+      scan-type: image
+      image-ref: ${{ needs.image.outputs.image-ref-digest }}
