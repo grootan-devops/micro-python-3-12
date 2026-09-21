@@ -1,4 +1,5 @@
 name: Check · Release Metadata
+run-name: "CI · ${{ github.event_name }} · ${{ github.sha }}"
 
 on:
   workflow_dispatch:
@@ -8,8 +9,6 @@ on:
         required: true
         default: 1.0.0
         type: string
-
-run-name: "CI · ${{ github.event_name }} · ${{ github.sha }}"
 
 concurrency:
   group: check-${{ github.repository }}-${{ github.ref }}

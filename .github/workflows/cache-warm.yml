@@ -1,11 +1,10 @@
 name: Cache · Warm Trivy Databases
+run-name: "CI · ${{ github.event_name }} · ${{ github.sha }}"
 
 on:
   workflow_dispatch:
   schedule:
     - cron: "0 0 * * *"
-
-run-name: "CI · ${{ github.event_name }} · ${{ github.sha }}"
 
 concurrency:
   group: cache-warm-${{ github.repository }}-${{ github.ref }}
