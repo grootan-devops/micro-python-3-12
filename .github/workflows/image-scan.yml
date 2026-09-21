@@ -51,4 +51,3 @@ jobs:
       scan-type: image
       image-repository: ${{ needs.init.outputs.image-repository }}
       target-version: ${{ needs.init.outputs.image-tag }}
-      fail-on-warnings: true

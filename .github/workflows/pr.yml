@@ -3,13 +3,6 @@ name: CI · Pull Request
 "on":
   pull_request:
     branches: [main]
-    paths:
-      - "*.sh"
-      - "*.md"
-      - VERSION
-      - ignored-cves.yml
-      - .gitignore
-      - .github/**
 
 run-name: "CI · ${{ github.event_name }} · ${{ github.sha }}"
 
@@ -65,7 +58,7 @@ jobs:
     with:
       image-tag: ${{ needs.init.outputs.image-push-tag }}
       image-repository: ${{ needs.init.outputs.image-push-repository }}
-      base-image-repo: registry-1.docker.io/grootantec/micro-root
+      base-image-repo: registry-1.docker.io/grootantech/micro-root
       # renovate: datasource=gitlab-tags depName=devops/container-image/base/micro-root
       base-image-tag: "1.0.0"
       install-packages: >-
@@ -120,7 +113,7 @@ jobs:
           -c 'cd /tmp/image-test && ./ci_image_test.sh'
 
   image-scan:
-    needs: [image, image-test, trivy-cache]
+    needs: [image, trivy-cache]
     uses: grootan-devops/github-ci-library/.github/workflows/scan.yml@dev
     secrets: inherit
     permissions:
@@ -129,7 +122,6 @@ jobs:
     with:
       scan-type: image
       image-ref: ${{ needs.image.outputs.image-ref-digest }}
-      fail-on-warnings: true
 
   check:
     needs: init

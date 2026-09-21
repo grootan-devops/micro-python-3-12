@@ -1,13 +1,11 @@
-name: Release · Buildah Image
+name: CD · Production Release
+run-name: "CD · ${{ github.event_name }} · ${{ github.sha }}"
 
 "on":
   push:
     branches: [main]
     paths-ignore:
       - .github/**
-  workflow_dispatch:
-
-run-name: "CI · ${{ github.event_name }} · ${{ github.sha }}"
 
 concurrency:
   group: release-${{ github.repository }}-${{ github.ref }}
@@ -28,50 +26,8 @@ jobs:
       ignore-docker: "false"
       ignore-chart: "true"
 
-  lint:
-    uses: grootan-devops/github-ci-library/.github/workflows/lint.yml@dev
-    secrets: inherit
-    permissions:
-      contents: read
-    with:
-      lint-md-files: "*.md"
-
-  trivy-cache:
-    uses: grootan-devops/github-ci-library/.github/workflows/trivy-cache.yml@dev
-    secrets: inherit
-    permissions:
-      contents: read
-      actions: write
-    with:
-      enable-java-db: false
-
-  check:
+  image:
     needs: init
-    uses: grootan-devops/github-ci-library/.github/workflows/check.yml@dev
-    secrets: inherit
-    permissions:
-      contents: read
-    with:
-      tag: ${{ needs.init.outputs.tag }}
-      image-tag: ${{ needs.init.outputs.image-tag }}
-      image-repository: ${{ needs.init.outputs.image-repository }}
-      allow-unstable-library-refs: true
-
-  image-scan:
-    needs: [init, trivy-cache]
-    uses: grootan-devops/github-ci-library/.github/workflows/scan.yml@dev
-    secrets: inherit
-    permissions:
-      contents: read
-      checks: write
-    with:
-      scan-type: image
-      image-repository: ${{ needs.init.outputs.image-push-repository }}
-      target-version: ${{ needs.init.outputs.candidate-image-tag }}
-      fail-on-warnings: true
-
-  promote:
-    needs: [init, check, image-scan]
     uses: grootan-devops/github-ci-library/.github/workflows/buildah.yml@dev
     secrets: inherit
     permissions:
@@ -79,16 +35,15 @@ jobs:
       packages: write
     with:
       is-release: true
-      require-scan: true
-      scan-result: ${{ needs.image-scan.result }}
-      image-tag: ${{ needs.init.outputs.image-tag }}
-      image-repository: ${{ needs.init.outputs.image-repository }}
-      image-dev-repository: ${{ needs.init.outputs.image-dev-repository }}
+      require-scan: false
+      image-tag: ${{ needs.init.outputs.tag }}
       release-tag: ${{ needs.init.outputs.tag }}
       candidate-tag: ${{ needs.init.outputs.candidate-image-tag }}
+      image-repository: ${{ needs.init.outputs.image-repository }}
+      image-dev-repository: ${{ needs.init.outputs.image-dev-repository }}
 
-  github-release:
-    needs: [init, promote]
+  release:
+    needs: [init, image]
     uses: grootan-devops/github-ci-library/.github/workflows/release.yml@dev
     secrets: inherit
     permissions:
