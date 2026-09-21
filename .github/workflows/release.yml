@@ -1,7 +1,7 @@
 name: CD · Production Release
 run-name: "CD · ${{ github.event_name }} · ${{ github.sha }}"
 
-"on":
+on:
   push:
     branches: [main]
     paths-ignore:

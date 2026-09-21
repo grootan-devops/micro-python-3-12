@@ -1,6 +1,6 @@
 name: Cache · Warm Trivy Databases
 
-"on":
+on:
   workflow_dispatch:
   schedule:
     - cron: "0 0 * * *"

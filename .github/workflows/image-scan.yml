@@ -1,6 +1,6 @@
 name: Scan · Existing Image Tag
 
-"on":
+on:
   workflow_dispatch:
     inputs:
       tag:

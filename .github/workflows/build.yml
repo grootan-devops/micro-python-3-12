@@ -1,6 +1,6 @@
 name: Build · Manual Image Verification
 
-"on":
+on:
   workflow_dispatch:
 
 run-name: "CI · ${{ github.event_name }} · ${{ github.sha }}"
