@@ -2,8 +2,6 @@ name: Lint · Standard Checks
 
 "on":
   workflow_dispatch:
-  push:
-    branches: [dev]
 
 run-name: "CI · ${{ github.event_name }} · ${{ github.sha }}"
 
