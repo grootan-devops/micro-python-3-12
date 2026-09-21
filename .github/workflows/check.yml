@@ -1,0 +1,44 @@
+name: Check · Release Metadata
+
+"on":
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to validate
+        required: true
+        default: 1.0.0
+        type: string
+
+run-name: "CI · ${{ github.event_name }} · ${{ github.sha }}"
+
+concurrency:
+  group: check-${{ github.repository }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  init:
+    uses: grootan-devops/github-ci-library/.github/workflows/init.yml@dev
+    secrets: inherit
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: read
+    with:
+      tag: ${{ inputs.tag }}
+      ignore-docker: "false"
+      ignore-chart: "true"
+
+  check:
+    needs: init
+    uses: grootan-devops/github-ci-library/.github/workflows/check.yml@dev
+    secrets: inherit
+    permissions:
+      contents: read
+    with:
+      tag: ${{ needs.init.outputs.tag }}
+      image-tag: ${{ needs.init.outputs.image-tag }}
+      image-repository: ${{ needs.init.outputs.image-repository }}
+      allow-unstable-library-refs: true
