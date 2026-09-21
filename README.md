@@ -6,10 +6,9 @@ Grootan micro-root image. The project intentionally contains no Dockerfile.
 ## Image
 
 - Registry: Docker Hub
-- Repository: `grootantec/micro-python-3-12`
-- Release: `1.0.0`
-- Python: `3.12.14`
-- Base: `grootantec/micro-root:1.5.1`
+- Repository: `grootantech/micro-python-3-12`
+- Python: `3.12`
+- Base: `grootantech/micro-root`
 
 The image uses `/usr/bin/dumb-init --` as its entrypoint and starts
 `python3.12` by default. It is built with PGO/LTO, includes `uv`, and removes

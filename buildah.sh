@@ -2,13 +2,13 @@
 
 set -euo pipefail
 
-: "${CONTAINER_MOUNT:?CONTAINER_MOUNT must be set by the Buildah workflow}"
 # renovate: datasource=github-tags depName=python/cpython extractVersion=^v?(?<version>.+)$
 PYTHON_VERSION="3.12.14"
 PYTHON_HOME="/usr/local"
 PYTHON_SRC="/tmp/cpython"
 PYTHON_PACKAGE_FILE_NAME="python_src.tgz"
 PYTHON_RUNTIME_LIB_FILE_NAME="py_runtime_libs.txt"
+
 for variable in PYTHON_VERSION PYTHON_HOME PYTHON_SRC PYTHON_PACKAGE_FILE_NAME PYTHON_RUNTIME_LIB_FILE_NAME; do
   buildah config --env "${variable}=${!variable}" "${BASE_CONTAINER}"
 done
@@ -20,9 +20,7 @@ buildah config --env PYTHONFAULTHANDLER=1 "${BASE_CONTAINER}"
 buildah config --env LD_LIBRARY_PATH=/usr/local/lib "${BASE_CONTAINER}"
 
 mkdir -p "${CONTAINER_MOUNT}${PYTHON_SRC}"
-curl --fail --show-error --location --proto '=https' --tlsv1.2 --retry 3 \
-  --output "${PYTHON_PACKAGE_FILE_NAME}" \
-  "https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz"
+curl --fail --show-error --location --proto '=https' --tlsv1.2 --retry 3 --output "${PYTHON_PACKAGE_FILE_NAME}" "https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz"
 tar -xf "${PYTHON_PACKAGE_FILE_NAME}" -C "${CONTAINER_MOUNT}${PYTHON_SRC}" --strip-components=1
 rm -f "${PYTHON_PACKAGE_FILE_NAME}"
 
