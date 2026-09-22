@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   init:
-    uses: grootan-devops/github-ci-library/.github/workflows/init.yml@dev
+    uses: grootan-devops/github-ci-library/.github/workflows/init.yml@1.0.0
     secrets: inherit
     permissions:
       contents: read
@@ -26,7 +26,7 @@ jobs:
       ignore-chart: "true"
 
   lint:
-    uses: grootan-devops/github-ci-library/.github/workflows/lint.yml@dev
+    uses: grootan-devops/github-ci-library/.github/workflows/lint.yml@1.0.0
     secrets: inherit
     permissions:
       contents: read
@@ -34,13 +34,13 @@ jobs:
       lint-md-files: "*.md"
 
   secret-scan:
-    uses: grootan-devops/github-ci-library/.github/workflows/secret-scanning.yml@dev
+    uses: grootan-devops/github-ci-library/.github/workflows/secret-scanning.yml@1.0.0
     secrets: inherit
     permissions:
       contents: read
 
   trivy-cache:
-    uses: grootan-devops/github-ci-library/.github/workflows/trivy-cache.yml@dev
+    uses: grootan-devops/github-ci-library/.github/workflows/trivy-cache.yml@1.0.0
     secrets: inherit
     permissions:
       contents: read
@@ -50,7 +50,7 @@ jobs:
 
   image:
     needs: init
-    uses: grootan-devops/github-ci-library/.github/workflows/buildah.yml@dev
+    uses: grootan-devops/github-ci-library/.github/workflows/buildah.yml@1.0.0
     secrets: inherit
     permissions:
       contents: read
@@ -114,7 +114,7 @@ jobs:
 
   image-scan:
     needs: [image, trivy-cache]
-    uses: grootan-devops/github-ci-library/.github/workflows/scan.yml@dev
+    uses: grootan-devops/github-ci-library/.github/workflows/scan.yml@1.0.0
     secrets: inherit
     permissions:
       contents: read
@@ -125,7 +125,7 @@ jobs:
 
   check:
     needs: init
-    uses: grootan-devops/github-ci-library/.github/workflows/check.yml@dev
+    uses: grootan-devops/github-ci-library/.github/workflows/check.yml@1.0.0
     secrets: inherit
     permissions:
       contents: read
@@ -133,4 +133,3 @@ jobs:
       tag: ${{ needs.init.outputs.tag }}
       image-tag: ${{ needs.init.outputs.image-tag }}
       image-repository: ${{ needs.init.outputs.image-repository }}
-      allow-unstable-library-refs: true

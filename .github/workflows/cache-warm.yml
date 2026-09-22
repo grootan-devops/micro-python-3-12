@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   trivy-cache:
-    uses: grootan-devops/github-ci-library/.github/workflows/trivy-cache.yml@dev
+    uses: grootan-devops/github-ci-library/.github/workflows/trivy-cache.yml@1.0.0
     secrets: inherit
     permissions:
       contents: read
