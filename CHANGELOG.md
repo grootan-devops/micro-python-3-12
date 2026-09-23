@@ -11,7 +11,7 @@ and this project follows [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
-- Use the Docker Hub namespace reference `grootantech/micro-root` consistently in candidate and pull-request builds.
+- Use the fully qualified `docker.io/grootantech/micro-root` reference so Buildah does not require interactive short-name resolution.
 
 ## [1.1.0] - 2026-09-22
 

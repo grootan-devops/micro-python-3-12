@@ -42,7 +42,7 @@ jobs:
     with:
       image-tag: ${{ needs.init.outputs.image-push-tag }}
       image-repository: ${{ needs.init.outputs.image-push-repository }}
-      base-image-repo: grootantech/micro-root
+      base-image-repo: docker.io/grootantech/micro-root
       # renovate: datasource=gitlab-tags depName=devops/container-image/base/micro-root
       base-image-tag: "1.0.0"
       install-packages: >-
