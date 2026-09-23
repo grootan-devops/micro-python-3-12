@@ -7,6 +7,12 @@ and this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-09-23
+
+### Changed
+
+- Use the Docker Hub namespace reference `grootantech/micro-root` consistently in candidate and pull-request builds.
+
 ## [1.1.0] - 2026-09-22
 
 ### Changed
