@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   init:
-    uses: grootan-devops/github-ci-library/.github/workflows/init.yml@dev
+    uses: grootan-devops/github-ci-library/.github/workflows/init.yml@1.0.0
     secrets: inherit
     permissions:
       contents: read
@@ -28,7 +28,7 @@ jobs:
 
   image:
     needs: init
-    uses: grootan-devops/github-ci-library/.github/workflows/buildah.yml@dev
+    uses: grootan-devops/github-ci-library/.github/workflows/buildah.yml@1.0.0
     secrets: inherit
     permissions:
       contents: read
@@ -44,7 +44,7 @@ jobs:
 
   release:
     needs: [init, image]
-    uses: grootan-devops/github-ci-library/.github/workflows/release.yml@dev
+    uses: grootan-devops/github-ci-library/.github/workflows/release.yml@1.0.0
     secrets: inherit
     permissions:
       contents: write

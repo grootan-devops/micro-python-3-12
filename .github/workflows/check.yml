@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   init:
-    uses: grootan-devops/github-ci-library/.github/workflows/init.yml@dev
+    uses: grootan-devops/github-ci-library/.github/workflows/init.yml@1.0.0
     secrets: inherit
     permissions:
       contents: read
@@ -32,7 +32,7 @@ jobs:
 
   check:
     needs: init
-    uses: grootan-devops/github-ci-library/.github/workflows/check.yml@dev
+    uses: grootan-devops/github-ci-library/.github/workflows/check.yml@1.0.0
     secrets: inherit
     permissions:
       contents: read
@@ -40,4 +40,3 @@ jobs:
       tag: ${{ needs.init.outputs.tag }}
       image-tag: ${{ needs.init.outputs.image-tag }}
       image-repository: ${{ needs.init.outputs.image-repository }}
-      allow-unstable-library-refs: true
