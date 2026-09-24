@@ -7,6 +7,12 @@ and this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-09-23
+
+### Changed
+
+- Use the fully qualified `docker.io/grootantech/micro-root` reference so Buildah does not require interactive short-name resolution.
+
 ## [1.1.0] - 2026-09-22
 
 ### Changed
