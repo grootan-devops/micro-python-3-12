@@ -7,6 +7,11 @@ and this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- Updated [`docker/login-action`](https://github.com/docker/login-action) from [`v3` to `v3`](https://app.renovatebot.com/package-diff?name=docker%2Flogin-action&from=v3.7.0&to=v3)
+- Updated [`docker/login-action`](https://github.com/docker/login-action) from [`v3` to `v3`](https://app.renovatebot.com/package-diff?name=docker%2Flogin-action&from=v3.7.0&to=v3)
+
 ## [1.1.1] - 2026-09-23
 
 ### Changed
