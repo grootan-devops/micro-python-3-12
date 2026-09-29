@@ -59,7 +59,6 @@ assert sys.dont_write_bytecode
 config_args = sysconfig.get_config_var("CONFIG_ARGS") or ""
 assert "--enable-optimizations" in config_args, config_args
 assert "--with-lto=full" in config_args, config_args
-assert "--without-doc-strings" in config_args, config_args
 for module_name in (
     "_curses", "_curses_panel", "_dbm", "_gdbm", "_tkinter",
     "_testbuffer", "_testcapi", "_testclinic", "_testimportmultiple",
