@@ -36,7 +36,7 @@ run_in_container_mount "
   export CXX=g++
   export CFLAGS='-O3 -pipe -fno-semantic-interposition -fstack-protector-strong -fstack-clash-protection -D_FORTIFY_SOURCE=2'
   export LDFLAGS='-Wl,-O1 -Wl,--as-needed -Wl,-z,relro,-z,now -Wl,--strip-all,-rpath=\$\$ORIGIN/../lib'
-  ./configure --with-ensurepip=install --enable-optimizations --with-lto=full --enable-shared --enable-option-checking=fatal --with-computed-gotos --without-static-libpython --without-doc-strings --without-readline --with-openssl-rpath=auto --prefix=${PYTHON_HOME}
+  ./configure --with-ensurepip=install --enable-optimizations --with-lto=full --enable-shared --enable-option-checking=fatal --with-computed-gotos --without-static-libpython --without-readline --with-openssl-rpath=auto --prefix=${PYTHON_HOME}
   make -j\$(nproc) PROFILE_TASK='-m test --pgo --timeout=120'
   make -j\$(nproc) altinstall
   ${PYTHON_HOME}/bin/python3.12 -m pip install --no-cache-dir --root-user-action=ignore --no-compile --upgrade pip uv
