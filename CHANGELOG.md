@@ -7,6 +7,13 @@ and this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-10-07
+
+### Changed
+
+- Updated [`docker/login-action`](https://github.com/docker/login-action) from [`v3` to `v4`](https://app.renovatebot.com/package-diff?name=docker%2Flogin-action&from=v3.7.0&to=v4.6.0)
+- Updated [`grootan-devops/github-ci-library`](https://github.com/grootan-devops/github-ci-library) from [`1.0.0` to `1.5.0`](https://app.renovatebot.com/package-diff?name=grootan-devops%2Fgithub-ci-library&from=1.0.0&to=1.5.0)
+
 ## [1.1.2] - 2026-09-29
 
 ### Fixed
