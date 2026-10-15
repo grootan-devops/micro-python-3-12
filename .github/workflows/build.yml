@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   init:
-    uses: grootan-devops/github-ci-library/.github/workflows/init.yml@1.0.0
+    uses: grootan-devops/github-ci-library/.github/workflows/init.yml@1.5.0
     secrets: inherit
     permissions:
       contents: read
@@ -24,7 +24,7 @@ jobs:
       ignore-chart: "true"
 
   trivy-cache:
-    uses: grootan-devops/github-ci-library/.github/workflows/trivy-cache.yml@1.0.0
+    uses: grootan-devops/github-ci-library/.github/workflows/trivy-cache.yml@1.5.0
     secrets: inherit
     permissions:
       contents: read
@@ -34,7 +34,7 @@ jobs:
 
   image:
     needs: init
-    uses: grootan-devops/github-ci-library/.github/workflows/buildah.yml@1.0.0
+    uses: grootan-devops/github-ci-library/.github/workflows/buildah.yml@1.5.0
     secrets: inherit
     permissions:
       contents: read
@@ -82,7 +82,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Log in to Docker Hub
-        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v3
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4
         with:
           registry: registry-1.docker.io
           username: ${{ secrets.IMAGE_REGISTRY_USERNAME }}
@@ -97,7 +97,7 @@ jobs:
 
   image-scan:
     needs: [image, trivy-cache]
-    uses: grootan-devops/github-ci-library/.github/workflows/scan.yml@1.0.0
+    uses: grootan-devops/github-ci-library/.github/workflows/scan.yml@1.5.0
     secrets: inherit
     permissions:
       contents: read
