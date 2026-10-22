@@ -7,6 +7,13 @@ and this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-10-22
+
+### Changed
+
+- Switched the `micro-root` base image Renovate annotation from `gitlab-tags` to `github-tags`
+  (`grootan-devops/micro-root`), so Renovate can track new base image releases again.
+
 ## [1.2.0] - 2026-10-22
 
 ### Changed
